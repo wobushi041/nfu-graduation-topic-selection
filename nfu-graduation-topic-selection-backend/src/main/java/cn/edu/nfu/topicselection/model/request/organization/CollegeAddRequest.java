@@ -2,6 +2,7 @@ package cn.edu.nfu.topicselection.model.request.organization;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -15,6 +16,7 @@ public class CollegeAddRequest implements Serializable {
     /**
      * 学院名称
      */
+    @NotBlank(message = "学院名称不能为空")
     private String collegeName;
 
     /// 序列化字段 ///

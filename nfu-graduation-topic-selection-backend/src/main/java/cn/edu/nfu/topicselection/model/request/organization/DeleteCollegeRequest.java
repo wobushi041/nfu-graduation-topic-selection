@@ -2,6 +2,7 @@ package cn.edu.nfu.topicselection.model.request.organization;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -15,6 +16,7 @@ public class DeleteCollegeRequest implements Serializable {
     /**
      * 学院 id
      */
+    @NotNull(message = "学院 id 不能为空")
     private Long collegeId;
 
     /// 序列化字段 ///

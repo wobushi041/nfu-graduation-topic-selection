@@ -1,6 +1,7 @@
 package cn.edu.nfu.topicselection.controller;
 
 import cn.edu.nfu.topicselection.annotation.SentinelRateLimit;
+import cn.edu.nfu.topicselection.annotation.ValidateRequest;
 import cn.edu.nfu.topicselection.model.entity.User;
 import cn.edu.nfu.topicselection.model.request.policy.SetCollegeConfigRequest;
 import cn.edu.nfu.topicselection.model.request.user.DeleteRequest;
@@ -27,6 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -106,6 +108,8 @@ class SelectionPolicyAndSystemControllerContractTest {
         assertNotNull(setLockMethod.getAnnotation(SaCheckLogin.class));
         assertNotNull(getCollegeCfgMethod.getAnnotation(SaCheckLogin.class));
         assertNotNull(setCollegeCfgMethod.getAnnotation(SaCheckLogin.class));
+        assertNotNull(setCollegeCfgMethod.getAnnotation(ValidateRequest.class));
+        assertFalse(setCollegeCfgMethod.getParameters()[0].isAnnotationPresent(Valid.class));
         assertNotNull(delCollegeCfgMethod.getAnnotation(SaCheckLogin.class));
         assertNotNull(testMethod.getAnnotation(SaIgnore.class));
         assertNotNull(getSystemInfoMethod.getAnnotation(SaCheckLogin.class));

@@ -2,6 +2,7 @@ package cn.edu.nfu.topicselection.model.request.organization;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class TeacherGroupsBatchRequest implements Serializable {
     /**
      * 教师账号列表
      */
+    @NotNull(message = "教师账号列表不能为空")
     private List<String> teacherAccounts;
 
     /// 序列化字段 ///

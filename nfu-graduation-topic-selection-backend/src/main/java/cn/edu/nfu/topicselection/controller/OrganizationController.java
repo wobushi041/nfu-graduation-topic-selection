@@ -1,6 +1,7 @@
 package cn.edu.nfu.topicselection.controller;
 
 import cn.edu.nfu.topicselection.annotation.SentinelRateLimit;
+import cn.edu.nfu.topicselection.annotation.ValidateRequest;
 import cn.edu.nfu.topicselection.exception.CodeBindMessageEnums;
 import cn.edu.nfu.topicselection.model.entity.College;
 import cn.edu.nfu.topicselection.model.entity.Major;
@@ -67,6 +68,7 @@ public class OrganizationController {
     @SentinelRateLimit(resource = "organization.college.add")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/add/college")
     public BaseResponse<Long> addCollege(@RequestBody CollegeAddRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, organizationApplicationService.addCollege(request));
@@ -81,6 +83,7 @@ public class OrganizationController {
     @SentinelRateLimit(resource = "organization.major.add")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/add/major")
     public BaseResponse<Long> addMajor(@RequestBody MajorAddRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, organizationApplicationService.addMajor(request));
@@ -95,6 +98,7 @@ public class OrganizationController {
     @SentinelRateLimit(resource = "organization.major.update-group")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/update/major/group")
     public BaseResponse<Boolean> updateMajorGroup(@RequestBody MajorGroupUpdateRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, organizationApplicationService.updateMajorGroup(request));
@@ -109,6 +113,7 @@ public class OrganizationController {
     @SentinelRateLimit(resource = "organization.topic-group.add")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/topic-group/add")
     public BaseResponse<Long> addTopicGroup(@RequestBody TopicGroupAddRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS,
@@ -124,6 +129,7 @@ public class OrganizationController {
     @SentinelRateLimit(resource = "organization.topic-group.update")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/topic-group/update")
     public BaseResponse<Boolean> updateTopicGroup(@RequestBody TopicGroupUpdateRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS,
@@ -139,6 +145,7 @@ public class OrganizationController {
     @SentinelRateLimit(resource = "organization.topic-group.delete")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/topic-group/delete")
     public BaseResponse<Boolean> deleteTopicGroup(@RequestBody TopicGroupDeleteRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS,
@@ -154,6 +161,7 @@ public class OrganizationController {
     @SentinelRateLimit(resource = "organization.college.delete")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/delete/college")
     public BaseResponse<Boolean> deleteCollege(@RequestBody DeleteCollegeRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, organizationApplicationService.deleteCollege(request));
@@ -168,6 +176,7 @@ public class OrganizationController {
     @SentinelRateLimit(resource = "organization.major.delete")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/delete/major")
     public BaseResponse<Boolean> deleteMajor(@RequestBody DeleteMajorRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, organizationApplicationService.deleteMajor(request));
@@ -184,6 +193,7 @@ public class OrganizationController {
     @SentinelRateLimit(resource = "organization.college.query-page")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/get/college/page")
     public BaseResponse<Page<College>> getCollege(@RequestBody CollegeQueryRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, organizationApplicationService.getCollegePage(request));
@@ -197,6 +207,7 @@ public class OrganizationController {
      */
     @SentinelRateLimit(resource = "organization.college.query-list")
     @SaCheckLogin
+    @ValidateRequest
     @PostMapping("/get/college/list")
     public BaseResponse<List<CollegeVO>> getCollegeList(@RequestBody CollegeQueryRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, organizationApplicationService.getCollegeList(request));
@@ -210,6 +221,7 @@ public class OrganizationController {
      */
     @SentinelRateLimit(resource = "organization.major.query-page")
     @SaCheckLogin
+    @ValidateRequest
     @PostMapping("/get/major/page")
     public BaseResponse<Page<Major>> getMajor(@RequestBody MajorQueryRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, organizationApplicationService.getMajorPage(request));
@@ -223,6 +235,7 @@ public class OrganizationController {
      */
     @SentinelRateLimit(resource = "organization.major.query-list")
     @SaCheckLogin
+    @ValidateRequest
     @PostMapping("/get/major/list")
     public BaseResponse<List<MajorVO>> getMajorList(@RequestBody MajorQueryRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, organizationApplicationService.getMajorList(request));
@@ -237,6 +250,7 @@ public class OrganizationController {
     @SentinelRateLimit(resource = "organization.topic-group.query-page")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/topic-group/page")
     public BaseResponse<Page<TopicGroup>> getTopicGroupPage(@RequestBody TopicGroupQueryRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS,
@@ -251,6 +265,7 @@ public class OrganizationController {
      */
     @SentinelRateLimit(resource = "organization.topic-group.query-list")
     @SaCheckLogin
+    @ValidateRequest
     @PostMapping("/topic-group/list")
     public BaseResponse<List<TopicGroupVO>> getTopicGroupList(@RequestBody TopicGroupQueryRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS,

@@ -2,6 +2,7 @@ package cn.edu.nfu.topicselection.model.request.organization;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -15,11 +16,13 @@ public class MajorGroupUpdateRequest implements Serializable {
     /**
      * 专业 id
      */
+    @NotNull(message = "专业和选题组不能为空")
     private Long majorId;
 
     /**
      * 选题组 id
      */
+    @NotNull(message = "专业和选题组不能为空")
     private Long topicGroupId;
 
     /// 序列化字段 ///

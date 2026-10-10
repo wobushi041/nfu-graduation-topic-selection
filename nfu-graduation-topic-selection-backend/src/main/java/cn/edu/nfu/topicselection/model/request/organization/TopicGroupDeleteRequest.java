@@ -2,6 +2,7 @@ package cn.edu.nfu.topicselection.model.request.organization;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -15,6 +16,7 @@ public class TopicGroupDeleteRequest implements Serializable {
     /**
      * 选题组 id
      */
+    @NotNull(message = "选题组 id 不能为空")
     private Long id;
 
     /// 序列化字段 ///

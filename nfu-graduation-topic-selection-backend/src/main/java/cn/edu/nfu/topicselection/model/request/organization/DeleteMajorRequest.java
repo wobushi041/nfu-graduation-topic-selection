@@ -2,6 +2,7 @@ package cn.edu.nfu.topicselection.model.request.organization;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -15,6 +16,7 @@ public class DeleteMajorRequest implements Serializable {
     /**
      * 专业 id
      */
+    @NotNull(message = "专业 id 不能为空")
     private Long majorId;
 
     /// 序列化字段 ///

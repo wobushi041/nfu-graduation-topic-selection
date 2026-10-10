@@ -1,19 +1,26 @@
 package cn.edu.nfu.topicselection.controller;
 
 import cn.edu.nfu.topicselection.annotation.SentinelRateLimit;
+import cn.edu.nfu.topicselection.annotation.ValidateRequest;
 import cn.edu.nfu.topicselection.model.entity.College;
 import cn.edu.nfu.topicselection.model.entity.Major;
-import cn.edu.nfu.topicselection.model.request.organization.DeleteCollegeRequest;
-import cn.edu.nfu.topicselection.model.request.organization.DeleteMajorRequest;
+import cn.edu.nfu.topicselection.model.entity.TopicGroup;
 import cn.edu.nfu.topicselection.model.request.organization.CollegeAddRequest;
 import cn.edu.nfu.topicselection.model.request.organization.CollegeQueryRequest;
+import cn.edu.nfu.topicselection.model.request.organization.DeleteCollegeRequest;
+import cn.edu.nfu.topicselection.model.request.organization.DeleteMajorRequest;
 import cn.edu.nfu.topicselection.model.request.organization.MajorAddRequest;
 import cn.edu.nfu.topicselection.model.request.organization.MajorGroupUpdateRequest;
 import cn.edu.nfu.topicselection.model.request.organization.MajorQueryRequest;
 import cn.edu.nfu.topicselection.model.request.organization.TeacherGroupQuotaUpdateRequest;
 import cn.edu.nfu.topicselection.model.request.organization.TeacherGroupsBatchRequest;
+import cn.edu.nfu.topicselection.model.request.organization.TopicGroupAddRequest;
+import cn.edu.nfu.topicselection.model.request.organization.TopicGroupDeleteRequest;
+import cn.edu.nfu.topicselection.model.request.organization.TopicGroupQueryRequest;
+import cn.edu.nfu.topicselection.model.request.organization.TopicGroupUpdateRequest;
 import cn.edu.nfu.topicselection.model.vo.CollegeVO;
 import cn.edu.nfu.topicselection.model.vo.MajorVO;
+import cn.edu.nfu.topicselection.model.vo.TopicGroupVO;
 import cn.edu.nfu.topicselection.response.BaseResponse;
 import cn.edu.nfu.topicselection.service.OrganizationApplicationService;
 import cn.dev33.satoken.annotation.SaCheckLogin;
@@ -25,12 +32,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.validation.Valid;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -62,7 +71,7 @@ class OrganizationAndGroupControllerContractTest {
     @InjectMocks
     private TeacherGroupController teacherGroupController;
 
-    // 场景：测试 ORG-001 ~ ORG-009 接口鉴权与限流注解完整性
+    // 场景：测试 OrganizationController 全部 14 个端点鉴权、限流与请求校验切面契约完整性
     @Test
     void organizationEndpoints_shouldDeclareAuthAndRateLimitAnnotations() throws Exception {
         // 1. 准备测试数据
@@ -75,6 +84,11 @@ class OrganizationAndGroupControllerContractTest {
         Method updateMajorGroupMethod = OrganizationController.class.getMethod("updateMajorGroup", MajorGroupUpdateRequest.class);
         Method getMajorMethod = OrganizationController.class.getMethod("getMajor", MajorQueryRequest.class);
         Method getMajorListMethod = OrganizationController.class.getMethod("getMajorList", MajorQueryRequest.class);
+        Method addTopicGroupMethod = OrganizationController.class.getMethod("addTopicGroup", TopicGroupAddRequest.class);
+        Method updateTopicGroupMethod = OrganizationController.class.getMethod("updateTopicGroup", TopicGroupUpdateRequest.class);
+        Method deleteTopicGroupMethod = OrganizationController.class.getMethod("deleteTopicGroup", TopicGroupDeleteRequest.class);
+        Method getTopicGroupPageMethod = OrganizationController.class.getMethod("getTopicGroupPage", TopicGroupQueryRequest.class);
+        Method getTopicGroupListMethod = OrganizationController.class.getMethod("getTopicGroupList", TopicGroupQueryRequest.class);
 
         // 2. 调用反射获取方法注解
         SentinelRateLimit addCollegeLimit = addCollegeMethod.getAnnotation(SentinelRateLimit.class);
@@ -86,19 +100,32 @@ class OrganizationAndGroupControllerContractTest {
         SentinelRateLimit updateMajorGroupLimit = updateMajorGroupMethod.getAnnotation(SentinelRateLimit.class);
         SentinelRateLimit getMajorLimit = getMajorMethod.getAnnotation(SentinelRateLimit.class);
         SentinelRateLimit getMajorListLimit = getMajorListMethod.getAnnotation(SentinelRateLimit.class);
+        SentinelRateLimit addTopicGroupLimit = addTopicGroupMethod.getAnnotation(SentinelRateLimit.class);
+        SentinelRateLimit updateTopicGroupLimit = updateTopicGroupMethod.getAnnotation(SentinelRateLimit.class);
+        SentinelRateLimit deleteTopicGroupLimit = deleteTopicGroupMethod.getAnnotation(SentinelRateLimit.class);
+        SentinelRateLimit getTopicGroupPageLimit = getTopicGroupPageMethod.getAnnotation(SentinelRateLimit.class);
+        SentinelRateLimit getTopicGroupListLimit = getTopicGroupListMethod.getAnnotation(SentinelRateLimit.class);
 
-        // 3. 断言所有端点均声明 @SaCheckLogin 与对应的 @SentinelRateLimit 资源名
-        assertNotNull(addCollegeMethod.getAnnotation(SaCheckLogin.class));
-        assertNotNull(deleteCollegeMethod.getAnnotation(SaCheckLogin.class));
+        // 3. 断言所有端点均声明 @SaCheckLogin、@SentinelRateLimit 与 @ValidateRequest 且参数未标记 @Valid
+        Method[] methods = new Method[]{
+                addCollegeMethod, deleteCollegeMethod, getCollegeMethod, getCollegeListMethod,
+                addMajorMethod, deleteMajorMethod, updateMajorGroupMethod, getMajorMethod, getMajorListMethod,
+                addTopicGroupMethod, updateTopicGroupMethod, deleteTopicGroupMethod,
+                getTopicGroupPageMethod, getTopicGroupListMethod
+        };
+        for (Method method : methods) {
+            assertNotNull(method.getAnnotation(SaCheckLogin.class), method.getName() + " 缺少 @SaCheckLogin");
+            assertNotNull(method.getAnnotation(ValidateRequest.class), method.getName() + " 缺少 @ValidateRequest");
+            assertFalse(method.getParameters()[0].isAnnotationPresent(Valid.class), method.getName() + " 参数不应标记 @Valid");
+        }
+
         assertNotNull(deleteCollegeMethod.getAnnotation(SaCheckRole.class));
-        assertNotNull(getCollegeMethod.getAnnotation(SaCheckLogin.class));
-        assertNotNull(getCollegeListMethod.getAnnotation(SaCheckLogin.class));
-        assertNotNull(addMajorMethod.getAnnotation(SaCheckLogin.class));
-        assertNotNull(deleteMajorMethod.getAnnotation(SaCheckLogin.class));
         assertNotNull(deleteMajorMethod.getAnnotation(SaCheckRole.class));
-        assertNotNull(updateMajorGroupMethod.getAnnotation(SaCheckLogin.class));
-        assertNotNull(getMajorMethod.getAnnotation(SaCheckLogin.class));
-        assertNotNull(getMajorListMethod.getAnnotation(SaCheckLogin.class));
+        assertNotNull(addTopicGroupMethod.getAnnotation(SaCheckRole.class));
+        assertNotNull(updateTopicGroupMethod.getAnnotation(SaCheckRole.class));
+        assertNotNull(deleteTopicGroupMethod.getAnnotation(SaCheckRole.class));
+        assertNotNull(getTopicGroupPageMethod.getAnnotation(SaCheckRole.class));
+
         assertEquals("organization.college.add", addCollegeLimit.resource());
         assertEquals("organization.college.delete", deleteCollegeLimit.resource());
         assertEquals("organization.college.query-page", getCollegeLimit.resource());
@@ -108,9 +135,14 @@ class OrganizationAndGroupControllerContractTest {
         assertEquals("organization.major.update-group", updateMajorGroupLimit.resource());
         assertEquals("organization.major.query-page", getMajorLimit.resource());
         assertEquals("organization.major.query-list", getMajorListLimit.resource());
+        assertEquals("organization.topic-group.add", addTopicGroupLimit.resource());
+        assertEquals("organization.topic-group.update", updateTopicGroupLimit.resource());
+        assertEquals("organization.topic-group.delete", deleteTopicGroupLimit.resource());
+        assertEquals("organization.topic-group.query-page", getTopicGroupPageLimit.resource());
+        assertEquals("organization.topic-group.query-list", getTopicGroupListLimit.resource());
     }
 
-    // 场景：测试 GRP-001 ~ GRP-003 接口鉴权与限流注解完整性
+    // 场景：测试 GRP-001 ~ GRP-003 接口鉴权、限流与请求校验切面契约完整性
     @Test
     void teacherGroupEndpoints_shouldDeclareAuthAndRateLimitAnnotations() throws Exception {
         // 1. 准备测试数据
@@ -131,8 +163,12 @@ class OrganizationAndGroupControllerContractTest {
         assertNotNull(getTeacherGroupsMethod.getAnnotation(SaCheckRole.class));
         assertNotNull(getTeacherGroupsBatchMethod.getAnnotation(SaCheckLogin.class));
         assertNotNull(getTeacherGroupsBatchMethod.getAnnotation(SaCheckRole.class));
+        assertNotNull(getTeacherGroupsBatchMethod.getAnnotation(ValidateRequest.class));
+        assertFalse(getTeacherGroupsBatchMethod.getParameters()[0].isAnnotationPresent(Valid.class));
         assertNotNull(updateTeacherGroupQuotaMethod.getAnnotation(SaCheckLogin.class));
         assertNotNull(updateTeacherGroupQuotaMethod.getAnnotation(SaCheckRole.class));
+        assertNotNull(updateTeacherGroupQuotaMethod.getAnnotation(ValidateRequest.class));
+        assertFalse(updateTeacherGroupQuotaMethod.getParameters()[0].isAnnotationPresent(Valid.class));
         assertNotNull(getGroupListMethod.getAnnotation(SaCheckLogin.class));
         assertNotNull(getGroupListMethod.getAnnotation(SaCheckRole.class));
         assertEquals("teacher-group.query-self", groupsLimit.resource());

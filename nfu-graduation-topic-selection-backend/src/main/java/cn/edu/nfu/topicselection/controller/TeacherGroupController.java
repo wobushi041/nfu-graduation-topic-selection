@@ -1,6 +1,7 @@
 package cn.edu.nfu.topicselection.controller;
 
 import cn.edu.nfu.topicselection.annotation.SentinelRateLimit;
+import cn.edu.nfu.topicselection.annotation.ValidateRequest;
 import cn.edu.nfu.topicselection.exception.CodeBindMessageEnums;
 import cn.edu.nfu.topicselection.model.request.organization.TeacherGroupQuotaUpdateRequest;
 import cn.edu.nfu.topicselection.model.request.organization.TeacherGroupsBatchRequest;
@@ -64,6 +65,7 @@ public class TeacherGroupController {
     @SentinelRateLimit(resource = "teacher-group.query-batch")
     @SaCheckLogin
     @SaCheckRole(value = {"admin", "topic_leader"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/teacher/groups/batch")
     public BaseResponse<Map<String, List<Map<String, Object>>>> getTeacherGroupsBatch(@RequestBody TeacherGroupsBatchRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, organizationApplicationService.getTeacherGroupsBatch(request));
@@ -78,6 +80,7 @@ public class TeacherGroupController {
     @SentinelRateLimit(resource = "teacher-group.quota.update")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/teacher/group/quota")
     public BaseResponse<Boolean> updateTeacherGroupQuota(@RequestBody TeacherGroupQuotaUpdateRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS,

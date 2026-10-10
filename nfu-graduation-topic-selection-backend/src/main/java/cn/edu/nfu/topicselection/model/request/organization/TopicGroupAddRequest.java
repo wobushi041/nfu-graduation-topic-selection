@@ -2,6 +2,8 @@ package cn.edu.nfu.topicselection.model.request.organization;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -15,11 +17,13 @@ public class TopicGroupAddRequest implements Serializable {
     /**
      * 所属学院 id
      */
+    @NotNull(message = "学院和选题组名称不能为空")
     private Long collegeId;
 
     /**
      * 选题组名称
      */
+    @NotBlank(message = "学院和选题组名称不能为空")
     private String groupName;
 
     /// 序列化字段 ///

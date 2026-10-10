@@ -1,6 +1,7 @@
 package cn.edu.nfu.topicselection.controller;
 
 import cn.edu.nfu.topicselection.annotation.SentinelRateLimit;
+import cn.edu.nfu.topicselection.annotation.ValidateRequest;
 import cn.edu.nfu.topicselection.exception.CodeBindMessageEnums;
 import cn.edu.nfu.topicselection.model.request.policy.SetCollegeConfigRequest;
 import cn.edu.nfu.topicselection.model.vo.CollegeConfigVO;
@@ -176,6 +177,7 @@ public class SelectionPolicyController {
     @SentinelRateLimit(resource = "policy.college-config.update")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/set/college/config")
     public BaseResponse<Boolean> setCollegeConfig(@RequestBody SetCollegeConfigRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, selectionPolicyService.setCollegeConfig(request));
