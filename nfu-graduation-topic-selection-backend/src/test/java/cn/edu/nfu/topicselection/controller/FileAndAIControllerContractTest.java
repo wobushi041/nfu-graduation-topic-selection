@@ -1,6 +1,7 @@
 package cn.edu.nfu.topicselection.controller;
 
 import cn.edu.nfu.topicselection.annotation.SentinelRateLimit;
+import cn.edu.nfu.topicselection.annotation.ValidateRequest;
 import cn.edu.nfu.topicselection.model.entity.User;
 import cn.edu.nfu.topicselection.model.request.ai.AiSendRequest;
 import cn.edu.nfu.topicselection.model.request.file.UploadFileRequest;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -106,6 +108,9 @@ class FileAndAIControllerContractTest {
         assertPostEndpoint(exportEnSelectMethod, "/export/student_topic_list/en_select", "file.export.student-en-select", new String[]{"admin"});
         assertPostEndpoint(exportUnSelectMethod, "/export/student_topic_list/un_select", "file.export.student-un-select", new String[]{"admin"});
         assertPostEndpoint(aiSendMethod, "/send", "ai.chat.send", new String[]{"student"});
+        // 4. 断言 aiSend 接口挂载了 @ValidateRequest 且参数未标记 @Valid
+        Assertions.assertNotNull(aiSendMethod.getAnnotation(ValidateRequest.class));
+        Assertions.assertFalse(aiSendMethod.getParameters()[0].isAnnotationPresent(Valid.class));
     }
 
     // 场景：测试 FileController 与 AIController 在 Wave 5 完成后仅保留单一应用服务依赖（达成 ARCH-04 与 RATE-001）

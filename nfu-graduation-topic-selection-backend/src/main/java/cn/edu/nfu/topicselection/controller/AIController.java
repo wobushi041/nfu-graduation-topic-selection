@@ -1,6 +1,7 @@
 package cn.edu.nfu.topicselection.controller;
 
 import cn.edu.nfu.topicselection.annotation.SentinelRateLimit;
+import cn.edu.nfu.topicselection.annotation.ValidateRequest;
 import cn.edu.nfu.topicselection.model.request.ai.AiSendRequest;
 import cn.edu.nfu.topicselection.response.BaseResponse;
 import cn.edu.nfu.topicselection.service.AIApplicationService;
@@ -46,6 +47,7 @@ public class AIController {
     @SentinelRateLimit(resource = "ai.chat.send")
     @SaCheckLogin
     @SaCheckRole(value = {"student"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/send")
     public BaseResponse<String> aiSend(@RequestBody AiSendRequest request) {
         return aiApplicationService.aiSend(request);

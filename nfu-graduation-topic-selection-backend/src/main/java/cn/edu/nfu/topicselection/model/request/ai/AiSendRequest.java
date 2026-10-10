@@ -2,6 +2,7 @@ package cn.edu.nfu.topicselection.model.request.ai;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -15,6 +16,7 @@ public class AiSendRequest implements Serializable {
     /**
      * 消息内容
      */
+    @NotBlank(message = "消息内容不能为空")
     private String content;
 
     /// 序列化字段 ///

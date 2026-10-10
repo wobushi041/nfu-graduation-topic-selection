@@ -31,7 +31,7 @@
 
 广州南方学院毕设选题管理系统（NCG Graduation Topic Selection System）是一套面向高校院系毕业设计选题场景的前后端分离管理系统。系统为学生、教师、选题负责人和系统管理员提供独立工作台，覆盖账号与组织维护、课题发布与审核、学生预选与确认、退选、统计导出和系统策略配置。
 
-项目采用 Maven 多模块与前端独立工程组成的单体仓库。前端通过 Umi Max 路由和权限模型开放角色页面，后端通过 Spring MVC、Sa-Token、Service 事务和 MyBatis-Plus 承载业务规则，并使用 MySQL、Redis、Caffeine 与 WebSocket 提供数据、会话、缓存和实时消息能力。
+项目采用 Maven 多模块与前端独立工程组成的单体仓库。前端通过 Umi Max 门户路由和权限模型进行开放角色页面控制，后端通过 Spring MVC、Sa-Token、Service 事务和 MyBatis-Plus 承载业务规则，并使用 MySQL、Redis、Caffeine 与 WebSocket 提供数据、会话、缓存和实时消息能力。
 
 ![系统首页预览](./nfu-graduation-topic-selection-frontend/public/home.png)
 
