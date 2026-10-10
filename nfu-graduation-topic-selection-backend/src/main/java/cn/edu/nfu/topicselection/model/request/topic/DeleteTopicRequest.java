@@ -2,6 +2,8 @@ package cn.edu.nfu.topicselection.model.request.topic;
 
 import lombok.Data;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -15,6 +17,8 @@ public class DeleteTopicRequest implements Serializable {
     /**
      * 题目 id
      */
+    @NotNull(message = "id 不能为空")
+    @Min(value = 1, message = "id 必须是正整数")
     private Long id;
 
     /// 序列化字段 ///

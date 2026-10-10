@@ -2,6 +2,8 @@ package cn.edu.nfu.topicselection.model.request.topic;
 
 import lombok.Data;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -15,6 +17,8 @@ public class GetTeacherTopicAmountRequest implements Serializable {
     /**
      * 教师 ID
      */
+    @NotNull(message = "教师标识不合法")
+    @Min(value = 1, message = "教师标识不合法")
     private Long teacherId;
 
     /// 序列化字段 ///

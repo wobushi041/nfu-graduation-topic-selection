@@ -1,6 +1,7 @@
 package cn.edu.nfu.topicselection.controller;
 
 import cn.edu.nfu.topicselection.annotation.SentinelRateLimit;
+import cn.edu.nfu.topicselection.annotation.ValidateRequest;
 import cn.edu.nfu.topicselection.exception.CodeBindMessageEnums;
 import cn.edu.nfu.topicselection.manager.ai.AIResult;
 import cn.edu.nfu.topicselection.model.request.topic.AddTopicRequest;
@@ -58,6 +59,7 @@ public class TopicController {
     @SentinelRateLimit(resource = "topic.add")
     @SaCheckLogin
     @SaCheckRole(value = {"teacher"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/add/topic")
     public BaseResponse<Long> addTopic(@RequestBody AddTopicRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, topicApplicationService.addTopic(request));
@@ -72,6 +74,7 @@ public class TopicController {
     @SentinelRateLimit(resource = "topic.delete")
     @SaCheckLogin
     @SaCheckRole(value = {"teacher"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/delete/topic")
     public BaseResponse<Boolean> deleteTopic(@RequestBody DeleteTopicRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, topicApplicationService.deleteTopic(request));
@@ -86,6 +89,7 @@ public class TopicController {
     @SentinelRateLimit(resource = "topic.quota.get")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/get/teacher/topicAmount")
     public BaseResponse<Integer> getTeacherTopicAmount(@RequestBody GetTeacherTopicAmountRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, topicApplicationService.getTeacherTopicAmount(request));
@@ -100,6 +104,7 @@ public class TopicController {
     @SentinelRateLimit(resource = "topic.quota.set")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/set/teacher/topicAmount")
     public BaseResponse<Boolean> setTeacherTopicAmount(@RequestBody SetTeacherTopicAmountRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, topicApplicationService.setTeacherTopicAmount(request));
@@ -116,6 +121,7 @@ public class TopicController {
     @SentinelRateLimit(resource = "topic.review.check")
     @SaCheckLogin
     @SaCheckRole(value = {"topic_leader", "teacher"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/check/topic")
     public BaseResponse<Boolean> checkTopic(@RequestBody CheckTopicRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, topicApplicationService.checkTopic(request));
@@ -130,6 +136,7 @@ public class TopicController {
     @SentinelRateLimit(resource = "topic.publication.publish")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/set/time/by/id")
     public BaseResponse<String> setTimeById(@RequestBody SetTimeRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, topicApplicationService.setTimeById(request));
@@ -144,6 +151,7 @@ public class TopicController {
     @SentinelRateLimit(resource = "topic.publication.unpublish")
     @SaCheckLogin
     @SaCheckRole(value = {"admin"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/unset/time/by/id")
     public BaseResponse<UnpublishTopicResultVO> unsetTimeById(@RequestBody UnSetTimeRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, topicApplicationService.unsetTimeById(request));
@@ -158,6 +166,7 @@ public class TopicController {
     @SentinelRateLimit(resource = "topic.update")
     @SaCheckLogin
     @SaCheckRole(value = {"teacher"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/update/topic")
     public BaseResponse<String> updateTopic(@RequestBody UpdateTopicRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, topicApplicationService.updateTopic(request));
@@ -172,6 +181,7 @@ public class TopicController {
     @SentinelRateLimit(resource = "topic.review.ai-level")
     @SaCheckLogin
     @SaCheckRole(value = {"admin", "teacher"}, mode = SaMode.OR)
+    @ValidateRequest
     @PostMapping("/get/topic/review_level")
     public BaseResponse<AIResult> getTopicReviewLevel(@RequestBody GetTopicReviewLevelRequest request) {
         return TheResult.success(CodeBindMessageEnums.SUCCESS, topicApplicationService.getTopicReviewLevel(request));

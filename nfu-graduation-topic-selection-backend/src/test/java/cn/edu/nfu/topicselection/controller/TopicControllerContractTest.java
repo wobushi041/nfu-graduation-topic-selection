@@ -1,6 +1,7 @@
 package cn.edu.nfu.topicselection.controller;
 
 import cn.edu.nfu.topicselection.annotation.SentinelRateLimit;
+import cn.edu.nfu.topicselection.annotation.ValidateRequest;
 import cn.edu.nfu.topicselection.exception.CodeBindMessageEnums;
 import cn.edu.nfu.topicselection.manager.ai.AIResult;
 import cn.edu.nfu.topicselection.model.request.topic.AddTopicRequest;
@@ -25,11 +26,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -155,7 +158,7 @@ class TopicControllerContractTest {
     }
 
     /**
-     * 校验指定控制器方法的路由、登录鉴权、角色鉴权与 Sentinel 限流注解
+     * 校验指定控制器方法的路由、登录鉴权、角色鉴权、参数校验与 Sentinel 限流注解
      *
      * @param methodName      方法名
      * @param parameterType   请求参数类型
@@ -175,6 +178,7 @@ class TopicControllerContractTest {
         SaCheckLogin checkLogin = method.getAnnotation(SaCheckLogin.class);
         SaCheckRole checkRole = method.getAnnotation(SaCheckRole.class);
         SentinelRateLimit rateLimit = method.getAnnotation(SentinelRateLimit.class);
+        ValidateRequest validateRequest = method.getAnnotation(ValidateRequest.class);
 
         assertNotNull(postMapping, methodName + " 缺少 @PostMapping");
         assertArrayEquals(new String[]{expectedPath}, postMapping.value());
@@ -183,6 +187,8 @@ class TopicControllerContractTest {
         assertArrayEquals(expectedRoles, checkRole.value());
         assertNotNull(rateLimit, methodName + " 缺少 @SentinelRateLimit");
         assertEquals(expectedLimit, rateLimit.resource());
+        assertNotNull(validateRequest, methodName + " 缺少 @ValidateRequest");
+        assertFalse(method.getParameters()[0].isAnnotationPresent(Valid.class), methodName + " 参数不应标记 @Valid");
     }
 
 }
